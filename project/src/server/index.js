@@ -12,17 +12,17 @@ app.use(bodyParser.json())
 
 app.use('/', express.static(path.join(__dirname, '../public')))
 
-// your API calls
+// API call to fetch rover data
+app.get('/:rover', async (req, res) => {
+    const rover = req.params.rover;
 
-// example API call
-app.get('/apod', async (req, res) => {
     try {
-        let image = await fetch(`https://api.nasa.gov/planetary/apod?api_key=${process.env.API_KEY}`)
+        let roverData = await fetch(`https://api.nasa.gov/mars-photos/api/v1/rovers/${rover}/latest_photos?api_key=${process.env.API_KEY}`)
             .then(res => res.json())
-        res.send({ image })
+        res.send({roverData})
     } catch (err) {
-        console.log('error:', err);
+        console.log('Error with API call:', err);
     }
 })
 
-app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+app.listen(port, () => console.log(`Mars Dashboard app listening on port ${port}!`))

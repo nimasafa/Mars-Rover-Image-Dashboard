@@ -1,6 +1,7 @@
 let store = {
-    user: { name: "Student" },
-    apod: '',
+    user: { name: "Nima" },
+    selectedRover: '',
+    roverData: '',
     rovers: ['Curiosity', 'Opportunity', 'Spirit'],
 }
 
@@ -19,24 +20,14 @@ const render = async (root, state) => {
 
 // create content
 const App = (state) => {
-    let { rovers, apod } = state
+    let { rovers, roverData, selectedRover } = state
+    RoverData(state);
 
     return `
-        <header></header>
+        <header><h1>Mars Rover Dashboard<h1></header>
         <main>
             ${Greeting(store.user.name)}
             <section>
-                <h3>Put things on the page!</h3>
-                <p>Here is an example section.</p>
-                <p>
-                    One of the most popular websites at NASA is the Astronomy Picture of the Day. In fact, this website is one of
-                    the most popular websites across all federal agencies. It has the popular appeal of a Justin Bieber video.
-                    This endpoint structures the APOD imagery and associated metadata so that it can be repurposed for other
-                    applications. In addition, if the concept_tags parameter is set to True, then keywords derived from the image
-                    explanation are returned. These keywords could be used as auto-generated hashtags for twitter or instagram feeds;
-                    but generally help with discoverability of relevant imagery.
-                </p>
-                ${ImageOfTheDay(apod)}
             </section>
         </main>
         <footer></footer>
@@ -45,7 +36,7 @@ const App = (state) => {
 
 // listening for load event because page should load before any JS is called
 window.addEventListener('load', () => {
-    render(root, store)
+    render(root, store);
 })
 
 // ------------------------------------------------------  COMPONENTS
@@ -62,7 +53,13 @@ const Greeting = (name) => {
         <h1>Hello!</h1>
     `
 }
-
+const RoverData = (state) => {
+    if (!state.selectedRover) {
+        /* Placeholder for one rover to test flow for the time being (NS) */
+        state.selectedRover = "Spirit";
+    }
+    getRoverData(state.selectedRover);
+}
 // Example of a pure function that renders infomation requested from the backend
 const ImageOfTheDay = (apod) => {
 
@@ -92,12 +89,11 @@ const ImageOfTheDay = (apod) => {
 // ------------------------------------------------------  API CALLS
 
 // Example API call
-const getImageOfTheDay = (state) => {
-    let { apod } = state
+const getRoverData = (rover) => {
 
-    return fetch(`http://localhost:3000/apod`)
+    return fetch(`http://localhost:3000/${rover}`)
         .then(res => res.json())
-        .then(apod => {
-            return updateStore(store, { apod })
+        .then(roverData => {
+            return updateStore(store, roverData)
         })
 }
