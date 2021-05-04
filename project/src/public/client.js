@@ -57,8 +57,8 @@ const RoverData = (state) => {
     if (!state.selectedRover) {
         /* Placeholder for one rover to test flow for the time being (NS) */
         state.selectedRover = "Spirit";
+        getRoverData(state.selectedRover);
     }
-    getRoverData(state.selectedRover);
 }
 // Example of a pure function that renders infomation requested from the backend
 const ImageOfTheDay = (apod) => {
@@ -91,7 +91,7 @@ const ImageOfTheDay = (apod) => {
 // Example API call
 const getRoverData = (rover) => {
 
-    return fetch(`http://localhost:3000/${rover}`)
+    return fetch(`http://localhost:3000/latest/${rover}`)
         .then(res => res.json())
         .then(roverData => {
             return updateStore(store, roverData)
