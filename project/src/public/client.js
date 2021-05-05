@@ -57,6 +57,10 @@ const RoverData = (state) => {
     if (!state.selectedRover) {
         /* Placeholder for one rover to test flow for the time being (NS) */
         state.selectedRover = "Spirit";
+    }
+
+    // If roverData has not yet been uploaded to store object, run API fetch request
+    if (!state.roverData) {
         getRoverData(state.selectedRover);
     }
 }
