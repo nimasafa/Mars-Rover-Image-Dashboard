@@ -28,6 +28,7 @@ const App = (state) => {
         <main>
             ${Greeting(store.user.name)}
             <section>
+                ${ChooseRover(state)}
             </section>
         </main>
         <footer></footer>
@@ -53,6 +54,47 @@ const Greeting = (name) => {
         <h1>Hello!</h1>
     `
 }
+
+/* When the user clicks on the button, toggle between hiding and showing the dropdown content */
+function myFunction(state, value) {
+    document.getElementById("myDropdown").classList.toggle("show");
+    state.selectedRover = value;
+}
+
+// Close the dropdown menu if the user clicks outside of it
+window.onclick = function(event) {
+    if (!event.target.matches('.dropbtn')) {
+        var dropdowns = document.getElementsByClassName("dropdown-content");
+        var i;
+        for (i = 0; i < dropdowns.length; i++) {
+            var openDropdown = dropdowns[i];
+            if (openDropdown.classList.contains('show')) {
+                openDropdown.classList.remove('show');
+            }
+        }
+    }
+}
+
+// Setup a dropdown menu for selecting Mars Rover
+const RoverButton = (state) => {
+    return `
+        <div class="dropdown">
+            <button onclick="myFunction(store, value)" class="dropbtn">Dropdown</button>
+            <div id="myDropdown" class="dropdown-content">
+                <a value="Curiosity">Curiosity</a>
+                <a value="Opportunity">Opportunity</a>
+                <a value="Spirit">Spirit</a>
+            </div>
+        </div>
+    `
+}
+
+const ChooseRover = (state) => {
+    return `
+        <div>Please select a Mars Rover: ${RoverButton(state)}</div>
+    `
+}
+
 const RoverData = (state) => {
     if (!state.selectedRover) {
         /* Placeholder for one rover to test flow for the time being (NS) */
