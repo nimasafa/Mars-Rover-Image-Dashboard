@@ -21,14 +21,13 @@ const render = async (root, state) => {
 // create content
 const App = (state) => {
     let { rovers, roverData, selectedRover } = state
-    RoverData(state);
 
     return `
         <header><h1>Mars Rover Dashboard<h1></header>
         <main>
             ${Greeting(store.user.name)}
             <section>
-                ${ChooseRover(state)}
+                ${ChooseRover()}
             </section>
         </main>
         <footer></footer>
@@ -39,6 +38,7 @@ const App = (state) => {
 window.addEventListener('load', () => {
     render(root, store);
 })
+
 
 // ------------------------------------------------------  COMPONENTS
 
@@ -54,58 +54,29 @@ const Greeting = (name) => {
         <h1>Hello!</h1>
     `
 }
-
-/* When the user clicks on the button, toggle between hiding and showing the dropdown content */
-function myFunction(state, value) {
-    document.getElementById("myDropdown").classList.toggle("show");
-    state.selectedRover = value;
-}
-
-// Close the dropdown menu if the user clicks outside of it
-window.onclick = function(event) {
-    if (!event.target.matches('.dropbtn')) {
-        var dropdowns = document.getElementsByClassName("dropdown-content");
-        var i;
-        for (i = 0; i < dropdowns.length; i++) {
-            var openDropdown = dropdowns[i];
-            if (openDropdown.classList.contains('show')) {
-                openDropdown.classList.remove('show');
-            }
-        }
-    }
-}
-
-// Setup a dropdown menu for selecting Mars Rover
-const RoverButton = (state) => {
+// Pure function that renders rover selection dropdown
+const ChooseRover = () => {
     return `
-        <div class="dropdown">
-            <button onclick="myFunction(store, value)" class="dropbtn">Dropdown</button>
-            <div id="myDropdown" class="dropdown-content">
-                <a value="Curiosity">Curiosity</a>
-                <a value="Opportunity">Opportunity</a>
-                <a value="Spirit">Spirit</a>
-            </div>
-        </div>
+        <label for="rover">Choose a Mars Rover from the list:</label>
+        <select id="rovers">
+            <option value="Curiosity">Curiosity</option>
+            <option value="Opportunity">Opportunity</option>
+            <option value="Spirit">Spirit</option>
+        </select>
     `
 }
 
-const ChooseRover = (state) => {
-    return `
-        <div>Please select a Mars Rover: ${RoverButton(state)}</div>
-    `
-}
-
-const RoverData = (state) => {
-    if (!state.selectedRover) {
-        /* Placeholder for one rover to test flow for the time being (NS) */
-        state.selectedRover = "Spirit";
+// IIFE to select rover based on dropdown and run API fetch request
+(function setRover() {
+    window.onload = function() {
+        let rover = document.getElementById('rovers');
+        rover.addEventListener('change', () => {
+            store.selectedRover = rover.options[rover.selectedIndex].value;
+            getRoverData(store.selectedRover);
+        });
     }
+})();
 
-    // If roverData has not yet been uploaded to store object, run API fetch request
-    if (!state.roverData) {
-        getRoverData(state.selectedRover);
-    }
-}
 // Example of a pure function that renders infomation requested from the backend
 const ImageOfTheDay = (apod) => {
 
