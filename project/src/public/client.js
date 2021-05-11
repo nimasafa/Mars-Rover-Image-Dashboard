@@ -53,25 +53,27 @@ window.addEventListener('load', () => {
 const Greeting = (name) => {
     if (name) {
         return `
-            <h1>Welcome, ${name}!</h1>
+            <h2>Welcome, ${name}!</h2>
         `
     }
 
     return `
-        <h1>Hello!</h1>
+        <h2>Hello!</h2>
     `
 }
 // Pure function that renders rover selection dropdown
 const ChooseRover = () => {
     return `
-        <label for="rover">Choose a Mars Rover from the list:</label>
-        <select id="rovers">
-            <option>Select</option>
-            <option value="Curiosity">Curiosity</option>
-            <option value="Opportunity">Opportunity</option>
-            <option value="Spirit">Spirit</option>
-        </select>
-        <button type="button" onClick="window.location.reload();">Refresh</button>
+        <div style="margin-top: 10px">
+            <label for="rover">Choose a Mars Rover from the list:</label>
+            <select id="rovers">
+                <option>Select</option>
+                <option value="Curiosity">Curiosity</option>
+                <option value="Opportunity">Opportunity</option>
+                <option value="Spirit">Spirit</option>
+            </select>
+            <button type="button" onClick="window.location.reload();">Refresh</button>
+        </div>
     `
 }
 
