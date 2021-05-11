@@ -59,6 +59,7 @@ const ChooseRover = () => {
     return `
         <label for="rover">Choose a Mars Rover from the list:</label>
         <select id="rovers">
+            <option>Select</option>
             <option value="Curiosity">Curiosity</option>
             <option value="Opportunity">Opportunity</option>
             <option value="Spirit">Spirit</option>
