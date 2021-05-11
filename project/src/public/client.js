@@ -34,10 +34,17 @@ const App = (state) => {
     `
 }
 
-// listening for load event because page should load before any JS is called
+// Listening for load event because page should load before any JS is called
+// Listening for dropdown list selection
 window.addEventListener('load', () => {
     render(root, store);
-})
+    
+    let rover = document.getElementById('rovers');
+    rover.addEventListener('change', () => {
+        store.selectedRover = rover.options[rover.selectedIndex].value;
+        getRoverData(store.selectedRover);
+    });
+});
 
 
 // ------------------------------------------------------  COMPONENTS
@@ -66,17 +73,6 @@ const ChooseRover = () => {
         </select>
     `
 }
-
-// IIFE to select rover based on dropdown and run API fetch request
-(function setRover() {
-    window.onload = function() {
-        let rover = document.getElementById('rovers');
-        rover.addEventListener('change', () => {
-            store.selectedRover = rover.options[rover.selectedIndex].value;
-            getRoverData(store.selectedRover);
-        });
-    }
-})();
 
 // Example of a pure function that renders infomation requested from the backend
 const ImageOfTheDay = (apod) => {
