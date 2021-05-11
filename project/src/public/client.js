@@ -71,6 +71,7 @@ const ChooseRover = () => {
             <option value="Opportunity">Opportunity</option>
             <option value="Spirit">Spirit</option>
         </select>
+        <button type="button" onClick="window.location.reload();">Refresh</button>
     `
 }
 
