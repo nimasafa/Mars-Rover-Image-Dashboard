@@ -102,6 +102,9 @@ const RoverData = (state) => {
                 </ul>
             </div>
         `
+    } else {
+
+        return ""
     }
 }
 
