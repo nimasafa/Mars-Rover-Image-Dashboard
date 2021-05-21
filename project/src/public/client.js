@@ -29,6 +29,9 @@ const App = (state) => {
             <section>
                 ${ChooseRover()}
             </section>
+            <section>
+                ${RoverData(state)}
+            </section>
         </main>
         <footer></footer>
     `
@@ -75,6 +78,31 @@ const ChooseRover = () => {
             <button type="button" onClick="window.location.reload();">Refresh</button>
         </div>
     `
+}
+
+// Once rover has been selected, process data from array, and display on webpage
+const RoverData = (state) => {
+    
+    // Only perform function if a rover has been selected
+    if (state.selectedRover) {
+        let output = state.roverData;
+
+        // retrieve mission data from array
+        const { name, launch_date, landing_date, status } = output[0].rover;
+        const photoEarthDate = output[0].earth_date;
+
+        return `
+            <div>
+                <ul>
+                    <li>Rover Name: ${name}</li>
+                    <li>Mission Launch Date: ${launch_date}</li>
+                    <li>Mars Landing Date: ${landing_date}</li>
+                    <li>Mission Status: ${status}</li>
+                    <li>Latest Photo Date: ${photoEarthDate}</li>
+                </ul>
+            </div>
+        `
+    }
 }
 
 // Example of a pure function that renders infomation requested from the backend
