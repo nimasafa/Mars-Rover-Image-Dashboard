@@ -33,6 +33,22 @@ footer {
   color: white;
 }
 
+.grid-item {
+	margin-bottom: 20px;
+	padding-left: 1px;
+	padding-right: 1px;
+	float: left;
+	width: 100%;
+}
+
+.img-element {
+	max-width: 320px;
+  width: 100%;
+  height: auto;
+  border: none;
+  margin: 0 auto;
+}
+
 /* -------------------  TABLET  --------------------- */
 @media (min-width: 768px) {
   /* use mobile */

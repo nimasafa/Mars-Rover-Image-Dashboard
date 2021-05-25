@@ -91,6 +91,15 @@ const RoverData = (state) => {
         const { name, launch_date, landing_date, status } = output[0].rover;
         const photoEarthDate = output[0].earth_date;
 
+        // retrieve photo URLs from array
+        const photoURL = output.map(photo => photo.img_src);
+        console.log(photoURL);
+
+        // Display gallery of rover latest photos
+        const photoGallery = photoURL.reduce((photoString, singlePhoto) => {
+            return photoString += `<li><img src="${singlePhoto}" height="350px" width="100%"></li>`
+        }, '');
+
         return `
             <div>
                 <ul>
@@ -99,6 +108,11 @@ const RoverData = (state) => {
                     <li>Mars Landing Date: ${landing_date}</li>
                     <li>Mission Status: ${status}</li>
                     <li>Latest Photo Date: ${photoEarthDate}</li>
+                </ul>
+            </div>
+            <div style="margin-top: 10px">
+                <ul>
+                    ${photoGallery}
                 </ul>
             </div>
         `
