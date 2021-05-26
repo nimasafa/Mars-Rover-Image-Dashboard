@@ -80,7 +80,7 @@ const ChooseRover = () => {
     `
 }
 
-// Pure function that processes rover data from array, and renders on webpage
+// Higher-order function with conditionality that processes rover data from array, and renders on webpage
 const RoverData = (state) => {
     
     // Only perform function if a rover has been selected
@@ -93,12 +93,6 @@ const RoverData = (state) => {
 
         // retrieve photo URLs from array
         const photoURL = output.map(photo => photo.img_src);
-        console.log(photoURL);
-
-        // Display gallery of rover latest photos
-        const photoGallery = photoURL.reduce((photoString, singlePhoto) => {
-            return photoString += `<li><img src="${singlePhoto}" height="350px" width="100%"></li>`
-        }, '');
 
         return `
             <div>
@@ -112,7 +106,7 @@ const RoverData = (state) => {
             </div>
             <div style="margin-top: 10px">
                 <ul>
-                    ${photoGallery}
+                    ${photoURL.reduce(photoGallery, '')}
                 </ul>
             </div>
         `
@@ -120,6 +114,11 @@ const RoverData = (state) => {
 
         return ""
     }
+}
+
+// callback function to feed into reduce method that displays gallery of rover photos
+const photoGallery = (photoString, singlePhoto) => {
+    return photoString += `<li><img src="${singlePhoto}" height="350px" width="100%"></li>`
 }
 
 // ------------------------------------------------------  API CALLS
