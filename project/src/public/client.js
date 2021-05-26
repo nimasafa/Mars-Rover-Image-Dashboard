@@ -68,7 +68,7 @@ const Greeting = (name) => {
 const ChooseRover = () => {
     return `
         <div style="margin-top: 10px">
-            <label for="rover">Choose a Mars Rover from the list:</label>
+            <label for="rover">Choose a Mars Rover from the List:</label>
             <select id="rovers">
                 <option>Select</option>
                 <option value="Curiosity">Curiosity</option>
@@ -104,10 +104,10 @@ const RoverData = (state) => {
                     <li>Latest Photo Date: ${photoEarthDate}</li>
                 </ul>
             </div>
-            <div style="margin-top: 10px">
-                <ul>
+            <div id="grid">
+                <div class="grid-container">
                     ${photoURL.reduce(photoGallery, '')}
-                </ul>
+                </div>
             </div>
         `
     } else {
@@ -118,7 +118,7 @@ const RoverData = (state) => {
 
 // callback function to feed into reduce method that displays gallery of rover photos
 const photoGallery = (photoString, singlePhoto) => {
-    return photoString += `<li><img src="${singlePhoto}" height="350px" width="100%"></li>`
+    return photoString += `<div><img src="${singlePhoto}" class="img-element"></div>`
 }
 
 // ------------------------------------------------------  API CALLS

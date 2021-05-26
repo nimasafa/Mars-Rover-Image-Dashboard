@@ -3,20 +3,22 @@
 body {
   display: flex;
   flex-direction: column;
-  font-family: Arial;
+  font-family: Stencil Std, fantasy;
+  font-size: 1rem;
   min-height: 100vh;
-  background-image: url("../images/Mars_Planet.webp");
-  color: white;
+  background-image: url("../images/nasa-galaxy.webp");
+  color: lightskyblue;
 }
 
 header {
   /* header styles */
   display: flex;
   flex-direction: column;
-  font-family: Arial;
+  font-family: Luminari, fantasy;
+  font-size: 1.75rem;
   justify-content: center;
   align-items: center;
-  color: white;
+  color: goldenrod;
 }
 
 main {
@@ -24,7 +26,7 @@ main {
 }
 
 section {
-  margin-top: 30px
+  margin-top: 30px;
 }
 
 footer {
@@ -33,35 +35,69 @@ footer {
   color: white;
 }
 
-.grid-item {
-	margin-bottom: 20px;
-	padding-left: 1px;
-	padding-right: 1px;
-	float: left;
-	width: 100%;
+#grid {
+  margin-top: 10px
+}
+
+.grid-container {
+  display: grid;
+	grid-template-columns: auto auto auto;
 }
 
 .img-element {
-	max-width: 320px;
-  width: 100%;
-  height: auto;
-  border: none;
-  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 80%;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  border: 2px solid lightskyblue;
 }
 
 /* -------------------  TABLET  --------------------- */
 @media (min-width: 768px) {
   /* use mobile */
+  header {
+    font-size: 1.8rem;
+  }
+
+  body {
+    font-size: 1.1rem;
+  }
+
 }
 
 /* -------------------  DESKTOP  -------------------- */
 
 @media (min-width: 1224px) {
   /* use mobile */
+  header {
+    font-size: 1.9rem;
+  }
+
+  body {
+    font-size: 1.2rem;
+  }
+  
+  .img-element {
+    width: 90%;
+  }
 }
+
 
 /* -------------------  LARGE SCREENS  -------------- */
 
 @media (min-width: 1824px) {
   /* use mobile */
+  header {
+    font-size: 2.25rem;
+  }
+
+  body {
+    font-size: 2rem;
+  }
+  
+  .img-element {
+    width: 100%;
+  }
 }
