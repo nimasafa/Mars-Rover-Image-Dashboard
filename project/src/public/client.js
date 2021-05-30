@@ -1,15 +1,15 @@
-let store = {
-    user: { name: "Nima" },
+let store = Immutable.Map({
+    user: Immutable.Map({ name: "Nima" }),
     selectedRover: '',
     roverData: '',
-    rovers: ['Curiosity', 'Opportunity', 'Spirit'],
-}
+    rovers: Immutable.List(['Curiosity', 'Opportunity', 'Spirit']),
+});
 
 // add our markup to the page
 const root = document.getElementById('root')
 
-const updateStore = (store, newState) => {
-    store = Object.assign(store, newState)
+const updateStore = (state, newState) => {
+    store = state.merge(newState);
     render(root, store)
 }
 
@@ -21,77 +21,114 @@ const render = async (root, state) => {
 // create content
 const App = (state) => {
     let { rovers, roverData, selectedRover } = state
-    RoverData(state);
 
     return `
         <header><h1>Mars Rover Dashboard<h1></header>
         <main>
-            ${Greeting(store.user.name)}
+            ${Greeting(store.get('user').get('name'))}
             <section>
+                ${ChooseRover()}
+            </section>
+            <section>
+                ${RoverData(state)}
             </section>
         </main>
         <footer></footer>
     `
 }
 
-// listening for load event because page should load before any JS is called
+// Listening for load event because page should load before any JS is called
+// Listening for dropdown list selection
 window.addEventListener('load', () => {
     render(root, store);
-})
+    
+    let rover = document.getElementById('rovers');
+    rover.addEventListener('change', () => {
+        const newStore = store.set('selectedRover', rover.options[rover.selectedIndex].value);
+        updateStore(store, newStore);
+        getRoverData(store.get('selectedRover'));
+    });
+});
+
 
 // ------------------------------------------------------  COMPONENTS
 
-// Pure function that renders conditional information -- THIS IS JUST AN EXAMPLE, you can delete it.
+// Pure function that renders conditional information
 const Greeting = (name) => {
     if (name) {
         return `
-            <h1>Welcome, ${name}!</h1>
+            <h2>Welcome, ${name}!</h2>
         `
     }
 
     return `
-        <h1>Hello!</h1>
+        <h2>Hello!</h2>
     `
 }
-const RoverData = (state) => {
-    if (!state.selectedRover) {
-        /* Placeholder for one rover to test flow for the time being (NS) */
-        state.selectedRover = "Spirit";
-    }
-    getRoverData(state.selectedRover);
+// Pure function that renders rover selection dropdown
+const ChooseRover = () => {
+    return `
+        <div style="margin-top: 10px">
+            <label for="rover">Choose a Mars Rover from the List:</label>
+            <select id="rovers">
+                <option>Select</option>
+                <option value="Curiosity">Curiosity</option>
+                <option value="Opportunity">Opportunity</option>
+                <option value="Spirit">Spirit</option>
+            </select>
+            <button type="button" onClick="window.location.reload();">Refresh</button>
+        </div>
+    `
 }
-// Example of a pure function that renders infomation requested from the backend
-const ImageOfTheDay = (apod) => {
 
-    // If image does not already exist, or it is not from today -- request it again
-    const today = new Date()
-    const photodate = new Date(apod.date)
+// Higher-order function with conditionality that processes rover data from array, and renders on webpage
+const RoverData = (state) => {
+    
+    // Only perform function if a rover has been selected
+    if (state.get('selectedRover') != '') {
+        let dataOutput = state.get('roverData');
 
-    if (!apod || apod.date === today.getDate() ) {
-        getImageOfTheDay(store)
-    }
+        // retrieve mission data from array
+        const roverDetails = dataOutput.get(0).get('rover');
+        const { name, launch_date, landing_date, status } = roverDetails.toJS();
+        const photoEarthDate = dataOutput.get(0).get('earth_date');
 
-    // check if the photo of the day is actually type video!
-    if (apod.media_type === "video") {
-        return (`
-            <p>See today's featured video <a href="${apod.url}">here</a></p>
-            <p>${apod.title}</p>
-            <p>${apod.explanation}</p>
-        `)
+        // retrieve photo URLs from array
+        const photoURL = dataOutput.map(photo => photo.get('img_src'));
+
+        return `
+            <div>
+                <ul>
+                    <li>Rover Name: ${name}</li>
+                    <li>Mission Launch Date: ${launch_date}</li>
+                    <li>Mars Landing Date: ${landing_date}</li>
+                    <li>Mission Status: ${status}</li>
+                    <li>Latest Photo Date: ${photoEarthDate}</li>
+                </ul>
+            </div>
+            <div id="grid">
+                <div class="grid-container">
+                    ${photoURL.reduce(photoGallery, '')}
+                </div>
+            </div>
+        `
     } else {
-        return (`
-            <img src="${apod.image.url}" height="350px" width="100%">
-            <p>${apod.image.explanation}</p>
-        `)
+
+        return ""
     }
+}
+
+// callback function to feed into reduce method that displays gallery of rover photos
+const photoGallery = (photoString, singlePhoto) => {
+    return photoString += `<div><img src="${singlePhoto}" class="img-element"></div>`
 }
 
 // ------------------------------------------------------  API CALLS
 
 // Example API call
-const getRoverData = (rover) => {
+const getRoverData = (selection) => {
 
-    return fetch(`http://localhost:3000/${rover}`)
+    return fetch(`http://localhost:3000/latest/${selection}`)
         .then(res => res.json())
         .then(roverData => {
             return updateStore(store, roverData)
