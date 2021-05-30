@@ -1,15 +1,15 @@
-let store = {
-    user: { name: "Nima" },
+let store = Immutable.Map({
+    user: Immutable.Map({ name: "Nima" }),
     selectedRover: '',
     roverData: '',
-    rovers: ['Curiosity', 'Opportunity', 'Spirit'],
-}
+    rovers: Immutable.List(['Curiosity', 'Opportunity', 'Spirit']),
+});
 
 // add our markup to the page
 const root = document.getElementById('root')
 
-const updateStore = (store, newState) => {
-    store = Object.assign(store, newState)
+const updateStore = (state, newState) => {
+    store = state.merge(newState);
     render(root, store)
 }
 
@@ -25,7 +25,7 @@ const App = (state) => {
     return `
         <header><h1>Mars Rover Dashboard<h1></header>
         <main>
-            ${Greeting(store.user.name)}
+            ${Greeting(store.get('user').get('name'))}
             <section>
                 ${ChooseRover()}
             </section>
@@ -44,8 +44,9 @@ window.addEventListener('load', () => {
     
     let rover = document.getElementById('rovers');
     rover.addEventListener('change', () => {
-        store.selectedRover = rover.options[rover.selectedIndex].value;
-        getRoverData(store.selectedRover);
+        const newStore = store.set('selectedRover', rover.options[rover.selectedIndex].value);
+        updateStore(store, newStore);
+        getRoverData(store.get('selectedRover'));
     });
 });
 
@@ -84,15 +85,16 @@ const ChooseRover = () => {
 const RoverData = (state) => {
     
     // Only perform function if a rover has been selected
-    if (state.selectedRover) {
-        let output = state.roverData;
+    if (state.get('selectedRover') != '') {
+        let dataOutput = state.get('roverData');
 
         // retrieve mission data from array
-        const { name, launch_date, landing_date, status } = output[0].rover;
-        const photoEarthDate = output[0].earth_date;
+        const roverDetails = dataOutput.get(0).get('rover');
+        const { name, launch_date, landing_date, status } = roverDetails.toJS();
+        const photoEarthDate = dataOutput.get(0).get('earth_date');
 
         // retrieve photo URLs from array
-        const photoURL = output.map(photo => photo.img_src);
+        const photoURL = dataOutput.map(photo => photo.get('img_src'));
 
         return `
             <div>
@@ -124,9 +126,9 @@ const photoGallery = (photoString, singlePhoto) => {
 // ------------------------------------------------------  API CALLS
 
 // Example API call
-const getRoverData = (rover) => {
+const getRoverData = (selection) => {
 
-    return fetch(`http://localhost:3000/latest/${rover}`)
+    return fetch(`http://localhost:3000/latest/${selection}`)
         .then(res => res.json())
         .then(roverData => {
             return updateStore(store, roverData)
