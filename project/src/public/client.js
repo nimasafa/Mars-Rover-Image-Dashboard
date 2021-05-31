@@ -83,7 +83,7 @@ const ChooseRover = () => {
 
 // Higher-order function with conditionality that processes rover data from array, and renders on webpage
 const RoverData = (state) => {
-    
+
     // Only perform function if a rover has been selected
     if (state.get('selectedRover') != '') {
         let dataOutput = state.get('roverData');
@@ -126,9 +126,9 @@ const photoGallery = (photoString, singlePhoto) => {
 // ------------------------------------------------------  API CALLS
 
 // Example API call
-const getRoverData = (selection) => {
+const getRoverData = (rover) => {
 
-    return fetch(`http://localhost:3000/latest/${selection}`)
+    return fetch(`http://localhost:3000/latest/${rover}`)
         .then(res => res.json())
         .then(roverData => {
             return updateStore(store, roverData)
