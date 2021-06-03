@@ -10,7 +10,7 @@ const root = document.getElementById('root')
 
 const updateStore = (state, newState) => {
     store = state.merge(newState);
-    render(root, store)
+    render(root, store);
 }
 
 const render = async (root, state) => {
@@ -27,9 +27,6 @@ const App = (state) => {
         <main>
             ${Greeting(store.get('user').get('name'))}
             <section>
-                ${ChooseRover()}
-            </section>
-            <section>
                 ${RoverData(state)}
             </section>
         </main>
@@ -38,16 +35,8 @@ const App = (state) => {
 }
 
 // Listening for load event because page should load before any JS is called
-// Listening for dropdown list selection
 window.addEventListener('load', () => {
     render(root, store);
-    
-    let rover = document.getElementById('rovers');
-    rover.addEventListener('change', () => {
-        const newStore = store.set('selectedRover', rover.options[rover.selectedIndex].value);
-        updateStore(store, newStore);
-        getRoverData(store.get('selectedRover'));
-    });
 });
 
 
@@ -65,27 +54,18 @@ const Greeting = (name) => {
         <h2>Hello!</h2>
     `
 }
-// Pure function that renders rover selection dropdown
-const ChooseRover = () => {
-    return `
-        <div style="margin-top: 10px">
-            <label for="rover">Choose a Mars Rover from the List:</label>
-            <select id="rovers">
-                <option>Select</option>
-                <option value="Curiosity">Curiosity</option>
-                <option value="Opportunity">Opportunity</option>
-                <option value="Spirit">Spirit</option>
-            </select>
-            <button type="button" onClick="window.location.reload();">Refresh</button>
-        </div>
-    `
-}
 
 // Higher-order function with conditionality that processes rover data from array, and renders on webpage
 const RoverData = (state) => {
 
     // Only perform function if a rover has been selected
     if (state.get('selectedRover') != '') {
+        
+        // Retrieve roverData from API as soon as rover is selected
+        if (state.get('roverData') === '') {
+            getRoverData(store.get('selectedRover'));
+        }
+
         let dataOutput = state.get('roverData');
 
         // retrieve mission data from array
@@ -106,6 +86,7 @@ const RoverData = (state) => {
                     <li>Latest Photo Date: ${photoEarthDate}</li>
                 </ul>
             </div>
+            <button type="button" onClick="window.location.reload();">Back</button>
             <div id="grid">
                 <div class="grid-container">
                     ${photoURL.reduce(photoGallery, '')}
@@ -114,7 +95,10 @@ const RoverData = (state) => {
         `
     } else {
 
-        return ""
+        return `
+            <div> Please select a rover from the options below: </div>
+            ${wrapRoverCards(state, roverCardMapper, state.get('rovers'), roverCard)}
+        `
     }
 }
 
@@ -122,6 +106,33 @@ const RoverData = (state) => {
 const photoGallery = (photoString, singlePhoto) => {
     return photoString += `<div><img src="${singlePhoto}" class="img-element"></div>`
 }
+
+// Higher order function that wraps set of roverCards in a HTML content division element
+const wrapRoverCards = (state, roverCardMapper, mapArray, roverCard) => {
+    return (`
+    <div class="rover-card-container">
+        ${roverCardMapper(state, mapArray, roverCard)}
+    </div >
+    `)
+}
+
+// Higher order function that maps through array of rovers and joins roverCards
+const roverCardMapper = (state, mapArray, roverCard) => {
+    return (`
+        ${mapArray.map(rover => roverCard(state, rover)).join('')}
+    `)
+}
+
+// Pure function that generates HTML card for rover, and updates store for rover selection upon click
+const roverCard = (state, rover) => {
+    return (`
+    <button class="rover-card"
+    onclick="updateStore(store, {selectedRover: '${rover}'})">
+    <h2 class="card-title">${rover}</h2>
+    </button>
+    `)
+}
+
 
 // ------------------------------------------------------  API CALLS
 

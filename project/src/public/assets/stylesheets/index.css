@@ -54,6 +54,38 @@ footer {
   border: 2px solid lightskyblue;
 }
 
+.rover-card-container {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  flex-direction: column;
+  align-items: center;
+}
+
+.rover-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: lightskyblue;
+  width: 200px;
+  height: 200px;
+  margin: 30px auto;
+  font-family: Stencil Std, fantasy;
+  opacity: 0.5;
+  background-color: black;
+}
+
+.rover-card:hover,
+.rover-card:focus,
+.rover-card:active {
+  opacity: 1;
+  outline-style: double;
+}
+
+.card-title {
+  color: lightskyblue
+}
+
 /* -------------------  TABLET  --------------------- */
 @media (min-width: 768px) {
   /* use mobile */
@@ -65,6 +97,10 @@ footer {
     font-size: 1.1rem;
   }
 
+  .rover-card {
+    width: 250px;
+    height: 250px;
+  }
 }
 
 /* -------------------  DESKTOP  -------------------- */
@@ -81,6 +117,11 @@ footer {
   
   .img-element {
     width: 90%;
+  }
+
+  .rover-card {
+    width: 300px;
+    height: 300px;
   }
 }
 
@@ -99,5 +140,10 @@ footer {
   
   .img-element {
     width: 100%;
+  }
+
+  .rover-card {
+    width: 350px;
+    height: 350px;
   }
 }
